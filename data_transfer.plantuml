@@ -1,0 +1,18 @@
+@startuml DataTransfer
+
+class PhotoCreateForm <<ActiveModel>> {
+    + id: ? Integer;
+    + urls_list: ?[] String;
+    + file: FileUpload;
+    + descriptors: ?[] Descriptor; 
+    + context: Context;
+} 
+
+class PhotoFilter <<ActiveModel>> {
+    + text: String;
+    + descriptors: ? [] Descriptor;
+    + codex_entries: ? [] CodexEntry;   
+} 
+
+@enduml
+

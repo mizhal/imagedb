@@ -1,0 +1,24 @@
+@startuml Controllers
+
+class ApplicationController {
+
+} 
+
+PhotosController --|> ApplicationController
+class PhotosController <<RESTCRUD>> {
+    + index(filter: PhotoFilter): HTMLResponse;
+    + create(form: PhotoCreateForm): HTMLResponse;
+    + describe(form: DescriptorForm): HTMLResponse;
+}
+
+CodexEntriesController --|> ApplicationController
+class CodexEntriesController <<RESTCRUD>> {
+
+} 
+
+DescriptorController --|> ApplicationController
+class DescriptorController <<RESTCRUD>> {
+
+} 
+ 
+@enduml
