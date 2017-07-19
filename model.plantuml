@@ -1,0 +1,57 @@
+@startuml Model 
+
+class HasTimestamp {
+    + id: Integer;
+    + created_at: Timestamp;
+    + updated_at: Timestamp;
+}
+
+class Photo <<HasTimestamp>> {
+    + url: Text; 
+    + content: Attachment;
+} 
+
+class Categorization <<HasTimestamp>> {
+    + volume: String;
+    + section: String;
+} 
+
+class Descriptor <<HasTimestamp>> {
+    + predicate: ? String;
+    + term: String;
+    + codified_term: ? CodexEntry;
+
+    + as_context(): Context;
+}
+
+class CodexEntry <<HasTimestamp>> {
+    + name: String;
+    + text: String;
+
+    + as_context(): Context;
+}
+
+class ImageHash {
+    hash: String;
+}
+
+class Valoration{
+    stars: Integer;
+    is_favorite: Boolean;
+} 
+
+class Context{
+    descriptors:[] Descriptor;
+
+    bind( photos:[] Photo ): Boolean;
+}
+
+CodexEntry *--> Categorization: belongs_to
+
+Photo "1" -- "*" Descriptor
+
+ImageHash --> Photo: belongs_to
+
+Photo <--* "1" Valoration: belongs_to
+
+@enduml

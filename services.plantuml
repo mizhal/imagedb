@@ -1,0 +1,23 @@
+@startuml Services
+
+class ImageCapture::Result { 
+    + error_log: [] String;
+    + status: { "OK", "ERROR", "NOT_FOUND" };
+    + image: ? Photo;
+    + http_status: Integer;
+    + items_ok: [] String;
+    + items_pending: [] String;  
+} 
+
+class ImageCaptureService <<Singleton>> {
+    + capture(url: String): ImageCapture::Result;
+    + capture_many(url_list: [] String): ImageCapture::Result;
+}
+
+class ImageImportService <<Singleton>> {
+    + import(fname: String): ImageCapture::Result;
+    + import_directory(dirname: String): ImageCapture::Result;
+}
+
+@enduml
+
