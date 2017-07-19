@@ -46,6 +46,19 @@ class Context{
     bind( photos:[] Photo ): Boolean;
 }
 
+class ExternalEntry {
+    url: String;
+    image_url: String;
+    combined_html_text: String;
+    metadata_bag: {}; 
+} 
+
+class SourceApi {
+    url_schema: String;
+
+    getFinalURL(params: {}): String;
+} 
+
 CodexEntry *--> Categorization: belongs_to
 
 Photo "1" -- "*" Descriptor

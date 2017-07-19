@@ -12,12 +12,24 @@ class ImageCapture::Result {
 class ImageCaptureService <<Singleton>> {
     + capture(url: String): ImageCapture::Result;
     + capture_many(url_list: [] String): ImageCapture::Result;
+    + capture_from_flow(entries: [] ExternalEntry);
 }
 
 class ImageImportService <<Singleton>> {
     + import(fname: String): ImageCapture::Result;
     + import_directory(dirname: String): ImageCapture::Result;
 }
+
+interface SourceFlowService {
+    + setSourceAPI(api_record: SourceAPI);
+    + setFlowParams(flow_params: {});
+    + getEntries(since: ? DateTime): [] ExternalEntry;  
+}
+
+TumblrSourceService --|> SourceFlowService
+class TumblrSourceService {
+
+} 
 
 @enduml
 
