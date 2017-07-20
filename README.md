@@ -18,3 +18,7 @@ Imagedb
 # Data transfer
 
 ![DataTransfer](out/data_transfer/DataTransfer.png) 
+# Sense making
+[Journal (in spanish)](docs/journal/Main.md)
+
+
