@@ -7,10 +7,10 @@ Warden::Strategies.add :atoken_auth do
   end
 
   def authenticate!
-    kind, token = request.headers['Authentication'].split(' ') 
+    kind, token = request.headers['Authentication'].split(' ')
     data, header = JWT.decode token, Rails.application.secrets.api_sec, true,
                               algorith: 'HS256'
-    user = User.find_by(email: data.with_indifferent_access[:user]) 
+    user = User.find_by(email: data.with_indifferent_access[:user])
     if user.present?
       success! user, 'success'
     end
