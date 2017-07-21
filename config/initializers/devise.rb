@@ -1,6 +1,28 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
-# Many of these configuration options can be set straight in your model.
+# Many of these configuration options can be set straight in your model
+
+Warden::Strategies.add :atoken_auth do
+  def valid?
+    request.headers['Authentication'].present?
+  end
+
+  def authenticate!
+    kind, token = request.headers['Authentication'].split(' ') 
+    data, header = JWT.decode token, Rails.application.secrets.api_sec, true,
+                              algorith: 'HS256'
+    user = User.find_by(email: data.with_indifferent_access[:user]) 
+    if user.present?
+      success! user, 'success'
+    end
+  rescue
+    false
+  end
+end
+
 Devise.setup do |config|
+  config.warden do |manager|
+    manager.default_strategies(scope: :user).unshift :atoken_auth
+  end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
