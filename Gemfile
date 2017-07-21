@@ -56,8 +56,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'rubocop'
 
-gem 'haml'
-
 gem 'devise'
 gem 'jwt'
 gem 'paperclip'
