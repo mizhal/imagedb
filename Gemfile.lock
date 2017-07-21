@@ -1,3 +1,9 @@
+PATH
+  remote: vendor/engines/api
+  specs:
+    api (0.1.0)
+      rails (~> 5.1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -272,6 +278,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  api!
   bcrypt (~> 3.1.7)
   byebug
   capistrano-rails
