@@ -1,6 +1,28 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
-# Many of these configuration options can be set straight in your model.
+# Many of these configuration options can be set straight in your model
+
+Warden::Strategies.add :atoken_auth do
+  def valid?
+    request.headers['Authentication'].present?
+  end
+
+  def authenticate!
+    kind, token = request.headers['Authentication'].split(' ')
+    data, header = JWT.decode token, Rails.application.secrets.api_sec, true,
+                              algorith: 'HS256'
+    user = User.find_by(email: data.with_indifferent_access[:user])
+    if user.present?
+      success! user, 'success'
+    end
+  rescue
+    false
+  end
+end
+
 Devise.setup do |config|
+  config.warden do |manager|
+    manager.default_strategies(scope: :user).unshift :atoken_auth
+  end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
@@ -274,4 +296,5 @@ Devise.setup do |config|
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
+  config.secret_key = '7461c5a17fefd3d4e020f8c3b51927aee188825cd597be76ed50f56f55afb3af473b4ad70a310de972576d62bb017a0bc507051af5a869f6049c2d975735aa3a'
 end
