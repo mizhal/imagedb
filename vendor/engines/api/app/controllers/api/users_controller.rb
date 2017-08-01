@@ -1,5 +1,4 @@
 class Api::UsersController < Api::ApplicationController
-
   before_action :authenticate_user!, except: :login
 
   def login

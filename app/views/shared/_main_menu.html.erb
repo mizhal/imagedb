@@ -1,10 +1,10 @@
 <ul class="nav navbar-nav">
     <% if user_signed_in? %>
-    <li><%= link_to t("logout"), "/users/sign_out"  %></li>
+    <li><%= link_to t("logout"), destroy_user_session_path, method: :delete %></li>
     <% else %>
-    <li><%= link_to t("login"), "/users/sign_in"  %></li>
+    <li><%= link_to t("login"), new_user_session_path  %></li>
     <% end %>
-    <li><%= link_to t("users_and_roles"), "/users"  %></li>
+    <li><%= link_to t("users_and_roles"), users_path  %></li>
     <li><%= link_to t("categories"), "/categories"  %></li>
     <li><%= link_to t("descriptors"), "/descriptors"  %></li>
     <li><%= link_to t("codex"), "/codices"  %></li>
