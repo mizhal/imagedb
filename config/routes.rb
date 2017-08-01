@@ -6,5 +6,6 @@ Rails.application.routes.draw do
       delete :destroy, as: :admin_destroy
     end
   end
+  resources :roles, except: %i[index show] 
   mount Api::Engine, at: '/api/v1/'
 end
