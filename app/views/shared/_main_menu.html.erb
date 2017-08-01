@@ -1,0 +1,11 @@
+<ul class="nav navbar-nav">
+    <% if user_signed_in? %>
+    <li><%= link_to t("logout"), "/users/sign_out"  %></li>
+    <% else %>
+    <li><%= link_to t("login"), "/users/sign_in"  %></li>
+    <% end %>
+    <li><%= link_to t("users_and_roles"), "/users"  %></li>
+    <li><%= link_to t("categories"), "/categories"  %></li>
+    <li><%= link_to t("descriptors"), "/descriptors"  %></li>
+    <li><%= link_to t("codex"), "/codices"  %></li>
+</ul>
