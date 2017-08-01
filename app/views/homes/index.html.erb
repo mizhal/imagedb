@@ -1,0 +1,12 @@
+<h1>Homes#index</h1>
+<p>Find me in app/views/homes/index.html.erb</p>
+
+<% content_for :sidebar_title do %> <%=t "sidebar" %> <% end %>
+<% content_for :sidebar do %>
+    <%= render partial: "shared/sidebar", locals: {
+        items:[
+            link_to("Root", "/")
+        ]  
+    } 
+    %>
+<% end %>
