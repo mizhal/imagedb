@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root to: 'homes#index'
+  devise_for :users, path: 'auth'
+  resources :users, except: :show
+  resources :roles, except: %i[index show]
+  mount Api::Engine, at: '/api/v1/'
 end

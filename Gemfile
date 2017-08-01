@@ -56,7 +56,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'rubocop'
 
-gem 'haml'
+gem 'friendly_id'
 
 gem 'devise'
 gem 'jwt'
@@ -64,3 +64,4 @@ gem 'paperclip'
 
 gem 'twitter-bootstrap-rails'
 
+gem 'api', path: 'vendor/engines/api'
