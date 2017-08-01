@@ -3,4 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :rememberable, :trackable, :timeoutable
+
+  extend FriendlyId
+  friendly_id :email, use: :slugged
 end
