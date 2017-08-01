@@ -25,25 +25,4 @@ RSpec.describe Api::UsersController, type: :controller do
     json = JSON.parse(response.body).with_indifferent_access
     json[:error].should eq 'Parameter email is missing'
   end
-
-  it 'shows all users' do
-    get :all, params: {format: :json}
-    response.code.should eq '401'
-
-    user, password = ['flop@mail.com', '123456'] 
-
-    User.create! email: user, password: password
-    post :login, params: {email: user, password: password}
-    response.code.should eq '200'
-    json = JSON.parse(response.body).with_indifferent_access
-
-    token = json[:atoken]
-
-    headers = {
-      'Authentication' => "bearer #{token}"
-    }
-    request.headers.merge! headers
-    get :all, params: {format: :json}
-    response.code.should eq '200'
-  end
 end

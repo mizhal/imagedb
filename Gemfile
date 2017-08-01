@@ -62,6 +62,7 @@ gem 'devise'
 gem 'jwt'
 gem 'paperclip'
 
+gem 'jquery-rails'
 gem 'twitter-bootstrap-rails'
 
 gem 'api', path: 'vendor/engines/api'
