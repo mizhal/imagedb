@@ -18,7 +18,8 @@
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
-      <%= f.text_field :name, :class => 'form-control' %>
+      <%= f.text_field :name, disabled: f.object.system,
+         class: 'form-control' %>
     </div>
     <%=f.error_span(:name) %>
   </div>

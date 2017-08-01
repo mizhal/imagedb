@@ -6,4 +6,9 @@ class User < ApplicationRecord
 
   extend FriendlyId
   friendly_id :email, use: :slugged
+
+  has_and_belongs_to_many :roles
+
+  validates :email, presence: true
+  validates :password, presence: true
 end
