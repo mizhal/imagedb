@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :category_hierarchies
+  resources :categories
   root to: 'homes#index'
   devise_for :users, path: 'auth'
   resources :users, except: :show

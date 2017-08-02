@@ -1,0 +1,27 @@
+<%= form_with(model: category_hierarchy, local: true) do |form| %>
+  <% if category_hierarchy.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(category_hierarchy.errors.count, "error") %> prohibited this category_hierarchy from being saved:</h2>
+
+      <ul>
+      <% category_hierarchy.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :category1_id %>
+    <%= form.text_field :category1_id, id: :category_hierarchy_category1_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category2_id %>
+    <%= form.text_field :category2_id, id: :category_hierarchy_category2_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
