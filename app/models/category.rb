@@ -8,4 +8,33 @@ class Category < ApplicationRecord
                          foreign_key: 'category1_id'
   has_many :children, through: :child_links, source: :category2,
                       class_name: 'Category'
+
+  scope :top_level, lambda {
+    left_outer_joins(:parent_links)
+      .where(category_hierarchies: { category2_id: nil })
+  }
+
+  scope :leafs, lambda {
+    left_outer_joins(:child_links)
+      .where(category_hierarchies: { category1_id: nil })
+  }
+
+  def top_level?
+    parent_links.empty?
+  end
+
+  def leaf?
+    child_links.empty?
+  end
+
+  ## main hierarchical ancestry: first parent
+  def ancestors
+    itr = self
+    res = []
+    until itr.top_level?
+      itr = itr.parents.first
+      res << itr
+    end
+    res
+  end
 end
