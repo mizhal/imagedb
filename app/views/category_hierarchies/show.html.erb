@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Category1:</strong>
+  <%= @category_hierarchy.category1 %>
+</p>
+
+<p>
+  <strong>Category2:</strong>
+  <%= @category_hierarchy.category2 %>
+</p>
+
+<%= link_to 'Edit', edit_category_hierarchy_path(@category_hierarchy) %> |
+<%= link_to 'Back', category_hierarchies_path %>
