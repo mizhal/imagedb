@@ -16,4 +16,19 @@ RSpec.describe Category, type: :model do
 
     expect(cat111.ancestors).to match_array [cat11, cat1]
   end
+
+  it 'does not allow duplicates' do
+    cat1 = create(:category)
+    cat11 = create(:category, name: 'cat11')
+    cat12 = create(:category, name: 'cat11')
+    cat13 = create(:category, name: 'cat13')
+
+    expect(cat1.add_child(cat11)).to be(true)
+    cat1.reload
+    expect(cat1.add_child(cat12)).to be(false)
+    expect(cat12.errors.messages[:duplicate_name]).to match_array ['cat11']
+
+    cat1.reload
+    expect(cat1.add_child(cat13)).to be(true)
+  end
 end

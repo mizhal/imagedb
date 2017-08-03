@@ -39,4 +39,14 @@ class Category < ApplicationRecord
     end
     res
   end
+
+  def add_child(category)
+    rel = CategoryHierarchy.create category1: self, category2: category
+    if rel.valid?
+      true
+    else
+      category.errors.add(:duplicate_name, category.name)
+      false
+    end
+  end
 end
