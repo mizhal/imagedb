@@ -59,3 +59,5 @@ RSpec.configure do |config|
   # Factory girl
   config.include FactoryGirl::Syntax::Methods
 end
+
+FactoryGirl.find_definitions

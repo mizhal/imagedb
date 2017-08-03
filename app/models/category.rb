@@ -9,6 +9,8 @@ class Category < ApplicationRecord
   has_many :children, through: :child_links, source: :category2,
                       class_name: 'Category'
 
+  validates :name, presence: true
+
   scope :top_level, lambda {
     left_outer_joins(:parent_links)
       .where(category_hierarchies: { category2_id: nil })
