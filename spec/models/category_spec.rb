@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Category, type: :model do
   it 'has hierarchy' do
-    cat1 = create(:category)
-    cat11 = create(:category)
-    cat12 = create(:category)
-    cat111 = create(:category)
+    cat1 = create(:category, name: "cat1")
+    cat11 = create(:category, name: "cat11")
+    cat12 = create(:category, name: "cat12")
+    cat111 = create(:category, name: "cat111")
 
     cat1.children << cat11
     cat1.children << cat12
@@ -15,9 +15,16 @@ RSpec.describe Category, type: :model do
     expect(cat111.parents).to include cat11
 
     expect(cat111.ancestors).to match_array [cat11, cat1]
+
+    puts cat11.siblings.to_sql
+    expect(cat11.siblings).to match_array [cat11, cat12]
   end
 
-  it 'does not allow duplicates' do
+  it 'does not allow duplicates on toplevel' do
+    
+  end
+
+  it 'does not allow duplicates on children' do
     cat1 = create(:category)
     cat11 = create(:category, name: 'cat11')
     cat12 = create(:category, name: 'cat11')
@@ -30,5 +37,18 @@ RSpec.describe Category, type: :model do
 
     cat1.reload
     expect(cat1.add_child(cat13)).to be(true)
+  end
+
+  it 'mantains order' do
+    ## TODO: test category sorting
+
+    cat1 = create(:category, name: 'cat1', order: 1)
+    cat2 = create(:category, name: 'cat2', order: 2)
+    cat3 = create(:category, name: 'cat3', order: 3)
+
+    cat4 = create(:category, name: 'cat4')
+
+    expect(cat14.order).to eq(4)
+
   end
 end

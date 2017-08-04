@@ -1,5 +1,5 @@
 class AddOrderToCategories < ActiveRecord::Migration[5.1]
   def change
-    add_column :categories, :order, :integer, default: 0
+    add_column :categories, :order, :integer, default: -1
   end
 end

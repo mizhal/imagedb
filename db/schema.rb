@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20170804161646) do
     t.boolean "hidden"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "order", default: 0
+    t.integer "order", default: -1
   end
 
   create_table "category_hierarchies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
