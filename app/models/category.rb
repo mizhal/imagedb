@@ -9,6 +9,22 @@ class Category < ApplicationRecord
   has_many :children, through: :child_links, source: :category2,
                       class_name: 'Category'
 
+  validates :name, presence: true
+
+  ### CALLBACKS
+  after_save :assign_order
+  def assign_order
+    if order.negative?
+      last_item = siblings.select(:order).order("order desc").first
+      if last_item.present?
+        update_column(:order, last_item.order + 1)
+      else
+        update_column(:order, 0)
+      end
+    end
+  end
+  ### END: CALLBACKS
+
   scope :top_level, lambda {
     left_outer_joins(:parent_links)
       .where(category_hierarchies: { category2_id: nil })
@@ -18,6 +34,18 @@ class Category < ApplicationRecord
     left_outer_joins(:child_links)
       .where(category_hierarchies: { category1_id: nil })
   }
+
+  ## category siblings including self
+  def siblings
+    if top_level?
+      Category.top_level
+    else
+      Category.joins(:parent_links)
+              .where(category_hierarchies: {
+                      category1_id: parents
+                    })
+    end
+  end
 
   def top_level?
     parent_links.empty?
@@ -36,5 +64,23 @@ class Category < ApplicationRecord
       res << itr
     end
     res
+  end
+
+  def add_child(category)
+    rel = CategoryHierarchy.create category1: self, category2: category
+    if rel.valid?
+      true
+    else
+      category.errors.add(:duplicate_name, category.name)
+      false
+    end
+  end
+
+  ## Categories are sorted in each level, previous category is
+  ## the one with the previous order number
+  def previous
+  end
+
+  def next 
   end
 end
