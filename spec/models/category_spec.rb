@@ -21,7 +21,14 @@ RSpec.describe Category, type: :model do
   end
 
   it 'does not allow duplicates on toplevel' do
-    
+    cat1 = create(:category, name: 'cat1')
+    cat2 = create(:category, name: 'cat2')
+    cat3 = create(:category, name: 'cat3')
+    cat4 = build(:category, name: 'cat2')
+
+    cat4.save
+
+    expect(cat4.persisted?).to be(false)
   end
 
   it 'does not allow duplicates on children' do
@@ -40,15 +47,13 @@ RSpec.describe Category, type: :model do
   end
 
   it 'mantains order' do
-    ## TODO: test category sorting
-
     cat1 = create(:category, name: 'cat1', order: 1)
     cat2 = create(:category, name: 'cat2', order: 2)
     cat3 = create(:category, name: 'cat3', order: 3)
 
     cat4 = create(:category, name: 'cat4')
 
-    expect(cat14.order).to eq(4)
+    expect(cat4.order).to eq(4)
 
   end
 end
