@@ -10,12 +10,20 @@ class Category < ApplicationRecord
                       class_name: 'Category'
 
   validates :name, presence: true
+  validate :unique_name
+  def unique_name
+    if top_level?
+      if Category.top_level.exists?(name: name)
+        errors.add(:name, "name must be unique")
+      end
+    end
+  end
 
   ### CALLBACKS
   after_save :assign_order
   def assign_order
     if order.negative?
-      last_item = siblings.select(:order).order("order desc").first
+      last_item = siblings.select(:order).order('order desc').first
       if last_item.present?
         update_column(:order, last_item.order + 1)
       else
