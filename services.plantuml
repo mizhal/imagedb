@@ -21,9 +21,9 @@ class ImageImportService <<Singleton>> {
 }
 
 interface SourceFlowService {
-    + setSourceAPI(api_record: SourceAPI);
-    + setFlowParams(flow_params: {});
-    + getEntries(since: ? DateTime): [] ExternalEntry;  
+    + set_source_api(api_record: SourceAPI);
+    + set_flow_params(flow_params: {});
+    + get_entries(since: ? DateTime): [] ExternalEntry;  
 }
 
 TumblrSourceService --|> SourceFlowService

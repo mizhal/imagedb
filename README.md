@@ -23,11 +23,9 @@ Imagedb
 # Gems & components
 
 * devise for auth
-* devise_token_auth for API auth
+* jwt for API auth with [json web token](https://tools.ietf.org/html/rfc7519) 
 * rubocop for static analysis
 * rspec-rails for testing
+* friendly_id for seo-friendly url mapping
 * paperclip for attachments
-* twitter-bootstrap-rails para estilos
-
-
-
+* twitter-bootstrap-rails for css styles

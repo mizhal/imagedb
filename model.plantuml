@@ -32,31 +32,31 @@ class CodexEntry <<HasTimestamp>> {
 }
 
 class ImageHash {
-    hash: String;
+    + hash: String;
 }
 
 class Valoration{
-    stars: Integer;
-    is_favorite: Boolean;
+    + stars: Integer;
+    + is_favorite: Boolean;
 } 
 
 class Context{
-    descriptors:[] Descriptor;
+    + descriptors:[] Descriptor;
 
-    bind( photos:[] Photo ): Boolean;
+    + bind( photos:[] Photo ): Boolean;
 }
 
 class ExternalEntry {
-    url: String;
-    image_url: String;
-    combined_html_text: String;
-    metadata_bag: {}; 
+    + url: String;
+    + image_url: String;
+    + combined_html_text: String;
+    + metadata_bag: {}; 
 } 
 
 class SourceApi {
-    url_schema: String;
+    + url_schema: String;
 
-    getFinalURL(params: {}): String;
+    + get_final_url(params: {}): String;
 } 
 
 CodexEntry *--> Categorization: belongs_to
