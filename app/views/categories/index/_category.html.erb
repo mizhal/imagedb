@@ -1,0 +1,33 @@
+<tr>
+    <td>
+        <%= link_to t('.create_child', :default => t("helpers.links.create_child")),
+                    category_path(category), :class => 'btn btn-default btn-xs' %>
+        <%= link_to t('.indent', :default => t("helpers.links.indent")),
+                    category_path(category), :class => 'btn btn-default btn-xs' %>
+        <%= link_to t('.dedent', :default => t("helpers.links.dedent")),
+                    category_path(category), :class => 'btn btn-default btn-xs' %>
+
+    </td>
+    <td><%= defined?(padding) ? indent(padding) : "" %> <%= category.name %>(<%= category.order %>)</td>
+    <td><%= category.system? ? t("yes") : t("no") %></td>
+    <td><%= category.hidden? ? t("yes") : t("no") %></td>
+    <td><%=l category.created_at, format: :short %></td>
+    <td>
+        <%= link_to t('.show', :default => t("helpers.links.show")),
+                    category_path(category), :class => 'btn btn-default btn-xs' %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                    edit_category_path(category), :class => 'btn btn-default btn-xs' %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                    category_path(category),
+                    :method => :delete,
+                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                    :class => 'btn btn-xs btn-danger' %>
+    </td>
+</tr>
+<% unless category.leaf? %>
+    <%= render partial: "categories/index/category", 
+        collection: category.children, locals: { 
+            padding: defined?(padding) ? padding + 1 : 1 
+        }  
+    %>
+<% end %>

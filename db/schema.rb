@@ -10,7 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170801190755) do
+ActiveRecord::Schema.define(version: 20170804161646) do
+
+  create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.boolean "system"
+    t.boolean "hidden"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order", default: -1
+  end
+
+  create_table "category_hierarchies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "category1_id"
+    t.bigint "category2_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category1_id"], name: "index_category_hierarchies_on_category1_id"
+    t.index ["category2_id"], name: "index_category_hierarchies_on_category2_id"
+  end
 
   create_table "friendly_id_slugs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "slug", null: false
@@ -63,6 +81,8 @@ ActiveRecord::Schema.define(version: 20170801190755) do
     t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
+  add_foreign_key "category_hierarchies", "categories", column: "category1_id"
+  add_foreign_key "category_hierarchies", "categories", column: "category2_id"
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"
 end
