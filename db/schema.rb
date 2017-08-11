@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 20170804161646) do
     t.boolean "hidden"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "order", default: -1
   end
 
   create_table "category_hierarchies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -26,6 +25,7 @@ ActiveRecord::Schema.define(version: 20170804161646) do
     t.bigint "category2_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "order", default: -1
     t.index ["category1_id"], name: "index_category_hierarchies_on_category1_id"
     t.index ["category2_id"], name: "index_category_hierarchies_on_category2_id"
   end
