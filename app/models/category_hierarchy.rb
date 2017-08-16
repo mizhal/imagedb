@@ -1,38 +1,37 @@
 class CategoryHierarchy < ApplicationRecord
-  VIRTUAL_ROOT_ID = 0
+  belongs_to :category1, class_name: 'Category' # parent
+  belongs_to :category2, class_name: 'Category' # child
 
-  belongs_to :category1, class_name: 'Category'
-  belongs_to :category2, class_name: 'Category'
-
-  scope :top_level, -> { where(category1_id: VIRTUAL_ROOT_ID) }
+  scope :top_level, -> { where(category1_id: CategoryHierarchy.root_id) }
 
   validate :unique_name
 
   def unique_name
-    duplicate = top_level? && Category.top_level.exists?(name: category2.name)
-    duplicate ||= !top_level? && category1.children.exists?(name: category2.name)
+    duplicate = category1.children.exists?(name: category2.name)
     errors.add(:duplicate_name, category2.name) if duplicate
-    duplicate
   end
 
   def top_level?
-    category1_id == VIRTUAL_ROOT_ID
+    category1_id == CategoryHierarchy.root_id
   end
 
   def parent_rels
-    Category.where(category2_id: category1_id)
+    CategoryHierarchy.where(category2_id: category1_id)
   end
 
   ### TREE MANAGEMENT
+  def self.root_id
+    Category.order('id asc').pluck(:id).first
+  end
 
   def self.put_toplevel(category)
     last_order = CategoryHierarchy.top_level.count
-    rel = CategoryHierarchy.create category1_id: VIRTUAL_ROOT_ID,
+    rel = CategoryHierarchy.create category1_id: CategoryHierarchy.root_id,
                                    category2: category,
                                    order: last_order + 1
-    return true if rel.valid?
-    rel.errors.each do |err|
-      category.errors << err
+    return true if rel.persisted?
+    rel.errors.each do |key, value|
+      category.errors.add(key, value)
     end
     false
   end
@@ -42,29 +41,32 @@ class CategoryHierarchy < ApplicationRecord
     rel = CategoryHierarchy.create category1: parent, category2: child,
                                    order: last_order
     return true if rel.valid?
-    rel.errors.each do |err|
-      child.errors << err
+    rel.errors.each do |key, value|
+      child.errors.add(key, value)
     end
     false
   end
 
-  def self.ancestors(category)
+  def self.cat_ancestors(category)
     Category.where(id: ancestor_ids(category))
   end
 
   def self.ancestor_ids(category)
-    itr = CategoryHierarchy.where(category2: category)
+    all = CategoryHierarchy.where(category2: category)
     res = []
-    until itr.top_level?
-      res << itr.category1_id
-      itr = itr.parent_rels.first
+    if all.any?
+      itr = all.first
+      until itr.top_level?
+        res << itr.category1_id
+        itr = itr.parent_rels.first
+      end
     end
     res
   end
 
   def self.siblings_ids(category)
     parents = CategoryHierarchy.where(category2: category)
-    CategoryHierarchy.where(category1: parents)
+    CategoryHierarchy.where(category1_id: parents.collect(&:category1_id))
                      .pluck(:category2_id)
   end
 

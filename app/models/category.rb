@@ -13,7 +13,7 @@ class Category < ApplicationRecord
 
   scope :top_level, lambda {
     left_outer_joins(:parent_links)
-      .where(category_hierarchies: { category2_id: VIRTUAL_ROOT_ID })
+      .where(category_hierarchies: { category2_id: CategoryHierarchy::ROOT_ID })
   }
 
   scope :leafs, lambda {
@@ -34,7 +34,7 @@ class Category < ApplicationRecord
   end
 
   def top_level?
-    parent_links.where.not(category2_id: VIRTUAL_ROOT_ID).empty?
+    parent_links.where.not(category2_id: CategoryHierarchy::VIRTUAL_ROOT_ID).empty?
   end
 
   def leaf?
