@@ -21,7 +21,7 @@ class CategoryHierarchy < ApplicationRecord
 
   ### TREE MANAGEMENT
   def self.root_id
-    Category.order('id asc').pluck(:id).first
+    Category.order('id asc').limit(1).pluck(:id).first
   end
 
   def self.put_toplevel(category)
@@ -66,7 +66,8 @@ class CategoryHierarchy < ApplicationRecord
 
   def self.siblings_ids(category)
     parents = CategoryHierarchy.where(category2: category)
-    CategoryHierarchy.where(category1_id: parents.collect(&:category1_id))
+                               .pluck(:category1_id)
+    CategoryHierarchy.where(category1_id: parents)
                      .pluck(:category2_id)
   end
 
