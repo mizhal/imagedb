@@ -40,11 +40,42 @@ class CategoryHierarchy < ApplicationRecord
     last_order = CategoryHierarchy.where(category1:parent).count
     rel = CategoryHierarchy.create category1: parent, category2: child,
                                    order: last_order
-    return true if rel.valid?
+    return true if rel.persisted?
     rel.errors.each do |key, value|
       child.errors.add(key, value)
     end
     false
+  end
+
+  def self.first_child(category)
+    CategoryHierarchy.where(category1: category1).limit(1)
+                     .order('order asc')
+                     .pluck(:id)
+                     .first
+  end
+
+  def self.last_child_id(category)
+    CategoryHierarchy.where(category1: category1).limit(1)
+                     .order('order desc')
+                     .pluck(:id)
+                     .first
+  end
+
+  def self.move_parent(category, new_parent)
+    parents = CategoryHierarchy.where(category2: category)
+    parents.update_all(category1: new_parent)
+  end
+
+  def self.put_after(category, after_category)
+  end
+
+  def self.put_before(category, before_category)
+  end
+
+  def self.put_last(category)
+  end
+
+  def self.put_first(category)
   end
 
   def self.cat_ancestors(category)
@@ -65,10 +96,13 @@ class CategoryHierarchy < ApplicationRecord
   end
 
   def self.siblings_ids(category)
+    sibling_rels(category).pluck(:category2_id)
+  end
+
+  def self.sibling_rels(category)
     parents = CategoryHierarchy.where(category2: category)
                                .pluck(:category1_id)
     CategoryHierarchy.where(category1_id: parents)
-                     .pluck(:category2_id)
   end
 
   def self.siblings(category)
