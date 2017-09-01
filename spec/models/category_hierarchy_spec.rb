@@ -31,5 +31,31 @@ RSpec.describe CategoryHierarchy, type: :model do
     CategoryHierarchy.put_toplevel cat4
 
     expect(cat4.errors.messages[:duplicate_name]).to match_array ['cat2']
+
+    cat11 = create(:category, name: 'cat3')
+    added = CategoryHierarchy.add_child cat1, cat11
+    expect(added).to be(true)
+    cat12 = create(:category, name: 'cat3')
+    added = CategoryHierarchy.add_child cat1, cat12
+    expect(added).to be(false)
+
+    expect(cat12.errors.messages[:duplicate_name]).to match_array ['cat3']
+
+    cat13 = create(:category, name: 'cat1.3')
+    added = CategoryHierarchy.add_child cat1, cat13
+    expect(added).to be(true)
+  end
+
+  it 'mantains order' do
+    cat1 = create(:category, name: 'cat1')
+    CategoryHierarchy.put_toplevel cat1
+    cat2 = create(:category, name: 'cat2')
+    CategoryHierarchy.put_toplevel cat2
+    cat3 = create(:category, name: 'cat3')
+    CategoryHierarchy.put_toplevel cat3
+    cat4 = create(:category, name: 'cat2')
+    CategoryHierarchy.put_toplevel cat4
+
+    
   end
 end
