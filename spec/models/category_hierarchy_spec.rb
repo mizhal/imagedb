@@ -46,7 +46,16 @@ RSpec.describe CategoryHierarchy, type: :model do
     expect(added).to be(true)
   end
 
-  it 'mantains order' do 
-      
+  it 'mantains order' do
+    cat1 = create(:category, name: 'cat1')
+    CategoryHierarchy.put_toplevel cat1
+    cat2 = create(:category, name: 'cat2')
+    CategoryHierarchy.put_toplevel cat2
+    cat3 = create(:category, name: 'cat3')
+    CategoryHierarchy.put_toplevel cat3
+    cat4 = create(:category, name: 'cat2')
+    CategoryHierarchy.put_toplevel cat4
+
+    
   end
 end

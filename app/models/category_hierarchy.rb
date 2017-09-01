@@ -19,6 +19,10 @@ class CategoryHierarchy < ApplicationRecord
     CategoryHierarchy.where(category2_id: category1_id)
   end
 
+  def has_category_as_child?(category)
+    category2 == category
+  end
+
   ### TREE MANAGEMENT
   def self.root_id
     Category.order('id asc').limit(1).pluck(:id).first
@@ -62,20 +66,53 @@ class CategoryHierarchy < ApplicationRecord
   end
 
   def self.move_parent(category, new_parent)
-    parents = CategoryHierarchy.where(category2: category)
-    parents.update_all(category1: new_parent)
+    parent_rels = CategoryHierarchy.where(category2: category)
+    parent_rels.update_all(category1: new_parent)
   end
 
   def self.put_after(category, after_category)
+    move_parent(category, after_category.parent)
+    ref = after_category.order
+    sibling_rels(category).select(:order).each do |node|
+      if node.order > ref
+        node.update_column(:order, node.order + 1)
+      elsif node.has_category_as_child?(category)
+        node.update_column(:order, ref + 1)
+      end
+    end
   end
 
   def self.put_before(category, before_category)
+    move_parent(category, before_category.parent)
+    ref = before_category.order
+    sibling_rels(category).select(:order).each do |node|
+      if node.order >= ref
+        node.update_column(:order, node.order + 1)
+      elsif node.has_category_as_child?(category)
+        node.update_column(:order, ref)
+      end
+    end
   end
 
   def self.put_last(category)
+    total = sibling_rels(category).count
+    sibling_rels(category).select(:order).each do |node|
+      if node.order > category.order
+        node.update_column(:order, node.order - 1)
+      elsif node.has_category_as_child?(category)
+        node.update_column(:order, total)
+      end
+    end
   end
 
   def self.put_first(category)
+    sibling_rels(category).select(:order).each do |node|
+      if node.order < category.order
+        node.update_column(:order, node.order + 1)
+      elsif node.has_category_as_child?(category)
+        node.update_column(:order, 0)
+      end
+    end
   end
 
   def self.cat_ancestors(category)
@@ -110,11 +147,17 @@ class CategoryHierarchy < ApplicationRecord
   end
 
   def self.previous_from(category)
-    
+    node = category.tree_node
+    id = CategoryHierarchy.where('order < ?', node.order)
+                          .order('order desc').pluck(:id).first
+    Category.find(id) if id.present?
   end
 
   def self.next_from(category)
-    
+    node = category.tree_node
+    id = CategoryHierarchy.where('order > ?', node.order)
+                          .order('order asc').pluck(:id).first
+    Category.find(id) if id.present?
   end
   ### END: TREE MANAGEMENT
 end

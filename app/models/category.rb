@@ -40,4 +40,17 @@ class Category < ApplicationRecord
   def leaf?
     child_links.empty?
   end
+
+  def parent 
+    parents.first
+  end
+
+  def order
+    ## order is a tree property
+    parent_links.first.order
+  end
+
+  def tree_node
+    parent_links.first
+  end
 end
