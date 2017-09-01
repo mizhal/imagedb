@@ -148,15 +148,15 @@ class CategoryHierarchy < ApplicationRecord
 
   def self.previous_from(category)
     node = category.tree_node
-    id = CategoryHierarchy.where('order < ?', node.order)
-                          .order('order desc').pluck(:id).first
+    id = sibling_rels(category).where('order < ?', node.order)
+                               .order('order desc').pluck(:id).first
     Category.find(id) if id.present?
   end
 
   def self.next_from(category)
     node = category.tree_node
-    id = CategoryHierarchy.where('order > ?', node.order)
-                          .order('order asc').pluck(:id).first
+    id = sibling_rels(category).where('order > ?', node.order)
+                               .order('order asc').pluck(:id).first
     Category.find(id) if id.present?
   end
   ### END: TREE MANAGEMENT
